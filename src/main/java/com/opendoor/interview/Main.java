@@ -16,6 +16,8 @@
 
 package com.opendoor.interview;
 
+import org.springframework.core.SpringVersion;
+
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,7 +35,6 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
-
 @Controller
 @SpringBootApplication
 public class Main {
@@ -58,11 +59,8 @@ public class Main {
     try (Connection connection = dataSource.getConnection()) {
 
       Statement stmt = connection.createStatement();
-      // select * from listings l where ST_DWithin(l.geoloc, 'POINT(33.5763 -111.9275)'::geography, 50);
       ResultSet results = stmt.executeQuery("select * from listings l where ST_DWithin(l.geoloc, 'POINT(33.5763 -111.9275)'::geography, 50);");
-      //stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      //stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      //ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+
       
       StringBuffer buf = new StringBuffer();
       while (results.next()) {
@@ -74,12 +72,9 @@ public class Main {
     	  buf.append("Lon: " + results.getFloat(15) + System.lineSeparator());
           buf.append("--------------------------");
       }
-/*
-      ArrayList<String> output = new ArrayList<String>();
-      while (rs.next()) {
-        output.add("Read from DB: " + rs.getTimestamp("tick"));
-      }
-*/
+      
+      buf.append("Spring version: " + SpringVersion.getVersion());
+
       model.put("records", buf.toString());
       return "db";
      

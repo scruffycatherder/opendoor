@@ -59,17 +59,30 @@ public class Main {
 
       Statement stmt = connection.createStatement();
       // select * from listings l where ST_DWithin(l.geoloc, 'POINT(33.5763 -111.9275)'::geography, 50);
-      stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
-      stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
-      ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
-
+      ResultSet results = stmt.executeQuery("select * from listings l where ST_DWithin(l.geoloc, 'POINT(33.5763 -111.9275)'::geography, 50);");
+      //stmt.executeUpdate("CREATE TABLE IF NOT EXISTS ticks (tick timestamp)");
+      //stmt.executeUpdate("INSERT INTO ticks VALUES (now())");
+      //ResultSet rs = stmt.executeQuery("SELECT tick FROM ticks");
+      
+      StringBuffer buf = new StringBuffer();
+      while (results.next()) {
+    	  buf.append("apn: " + results.getString(1) + System.lineSeparator());
+    	  buf.append("ListingID: " + results.getInt(2) + System.lineSeparator());
+    	  buf.append("DwellingType: " + results.getString(4) + System.lineSeparator());
+    	  buf.append("ListPrice: " + results.getFloat(11) + System.lineSeparator());
+    	  buf.append("Lat: " + results.getFloat(14) + System.lineSeparator());
+    	  buf.append("Lon: " + results.getFloat(15) + System.lineSeparator());
+          buf.append("--------------------------");
+      }
+/*
       ArrayList<String> output = new ArrayList<String>();
       while (rs.next()) {
         output.add("Read from DB: " + rs.getTimestamp("tick"));
       }
-
-      model.put("records", output);
+*/
+      model.put("records", buf.toString());
       return "db";
+     
     } catch (Exception e) {
       model.put("message", e.getMessage());
       return "error";

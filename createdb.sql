@@ -1,3 +1,9 @@
+heroku addons:create heroku-postgresql:hobby-dev -a bobl-opendoor
+heroku pg:psql
+  - create extension postgis;
+  - select postgis_version();
+
+
 CREATE TABLE listings (
     apn character varying(20),
     ListingId integer,
@@ -24,8 +30,6 @@ CREATE TABLE listings (
 ##ListingID is not unique id
 
 \copy listings FROM '/users/bobl/eclipse-workspace/opendoor/listings.csv' WITH DELIMITER ',' CSV HEADER;
-
-### COPY listings(apn, listingid, modtimestamp, dwellingtype, listdate, closedate, contractdate, expirationdate, canceldate, originallistprice, listprice, closeprice, geolat, geolon, postalcode, yearbuilt, livingarea, numbedrooms, numbaths)
 
 ALTER TABLE listings ADD COLUMN geoloc GEOGRAPHY;
 UPDATE listings set geoloc=ST_POINT(geolat, geolon);

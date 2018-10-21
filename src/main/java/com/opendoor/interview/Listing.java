@@ -1,7 +1,8 @@
 package com.opendoor.interview;
 
 import java.time.LocalDateTime;
-
+import java.sql.Date;
+import java.sql.Timestamp;
 /*
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
@@ -22,21 +23,87 @@ public class Listing {
 	private LocalDate contractDate;
 	private LocalDate expirationDate;
 	private LocalDate cancelDate;
-	private double originalListPrice;
+	private double originalListPrice;  // TODO - float is probably fine for prices.
 	private double listPrice;
 	private double closePrice;
 	private double geoLat;
 	private double geoLon;
 	private String postalCode;
 	private int yearBuilt;
-	private double livingArea;
+	private double livingArea;  // TODO probably should be a float
 	private int numBedrooms;
-	private double numBaths;
+	private double numBaths;  // TODO - should probably be a float.
 	
 //	@Id
 //	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long listingID_PK;
 	
+	public Listing( long listingID_PK, String apn, int listingId, LocalDateTime modTimestamp, String dwellingType, LocalDate listDate,
+			LocalDate closeDate, LocalDate contractDate, LocalDate expirationDate, LocalDate cancelDate,
+			double originalListPrice, double listPrice, double closePrice, double geoLat, double geoLon,
+			String postalCode, int yearBuilt, double livingArea, int numBedrooms, double numBaths) {
+		super();
+		this.listingID_PK = listingID_PK;
+		this.apn = apn;
+		this.listingId = listingId;
+		this.modTimestamp = modTimestamp;
+		this.dwellingType = dwellingType;
+		this.listDate = listDate;
+		this.closeDate = closeDate;
+		this.contractDate = contractDate;
+		this.expirationDate = expirationDate;
+		this.cancelDate = cancelDate;
+		this.originalListPrice = originalListPrice;
+		this.listPrice = listPrice;
+		this.closePrice = closePrice;
+		this.geoLat = geoLat;
+		this.geoLon = geoLon;
+		this.postalCode = postalCode;
+		this.yearBuilt = yearBuilt;
+		this.livingArea = livingArea;
+		this.numBedrooms = numBedrooms;
+		this.numBaths = numBaths;
+	}
+	
+	public Listing( long listingID_PK, String apn, int listingId, Timestamp modTimestamp, String dwellingType, Date listDate,
+			Date closeDate, Date contractDate, Date expirationDate, Date cancelDate,
+			double originalListPrice, double listPrice, double closePrice, double geoLat, double geoLon,
+			String postalCode, int yearBuilt, double livingArea, int numBedrooms, double numBaths) {
+		super();
+		this.listingID_PK = listingID_PK;
+		this.apn = apn;
+		this.listingId = listingId;
+		if (modTimestamp != null) {
+		  this.modTimestamp = modTimestamp.toLocalDateTime();
+		}
+		this.dwellingType = dwellingType;
+		if (listDate != null) {
+		  this.listDate = listDate.toLocalDate();
+		}
+		if (closeDate != null) {
+		  this.closeDate = closeDate.toLocalDate();
+		}
+		if (contractDate != null) {
+	      this.contractDate = contractDate.toLocalDate();
+		}
+		if (expirationDate != null) {
+		  this.expirationDate = expirationDate.toLocalDate();
+		}
+		if (cancelDate != null) {
+		  this.cancelDate = cancelDate.toLocalDate();
+		}
+		this.originalListPrice = originalListPrice;
+		this.listPrice = listPrice;
+		this.closePrice = closePrice;
+		this.geoLat = geoLat;
+		this.geoLon = geoLon;
+		this.postalCode = postalCode;
+		this.yearBuilt = yearBuilt;
+		this.livingArea = livingArea;
+		this.numBedrooms = numBedrooms;
+		this.numBaths = numBaths;
+	}
+
 	public long getListingID_PK() {
 		return listingID_PK;
 	}

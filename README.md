@@ -12,3 +12,8 @@ database schema is hacked together for convenience.  for example:
    - Added serial primary key after the fact to make it easier to import.
         - Ideally, we'd find a universal primary key (apn and listingId both have nulls).
 
+Pagination hacked together to avoid using spring data.
+Needs tests.
+Needs documentation.
+Needs error handling.
+Needs instrumentation.

@@ -26,7 +26,10 @@ import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.stereotype.Controller;
+//import org.springframework.stereotype.Repository;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+//import org.springframework.web.bind.annotation.RestController;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -35,6 +38,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.Map;
+//@Repository
+
 @Controller
 @SpringBootApplication
 public class Main {
@@ -49,14 +54,22 @@ public class Main {
     SpringApplication.run(Main.class, args);
   }
 
-  @RequestMapping("/")
+  @RequestMapping(method=RequestMethod.GET, path="/")
   String index() {
     return "index";
   }
 
-  @RequestMapping("/db")
+  @RequestMapping(method=RequestMethod.GET, path="/db")
   String db(Map<String, Object> model) {
+
+  	try {
+		Class.forName("org.postgresql.Driver");
+	} catch (ClassNotFoundException e1) {
+		// TODO Auto-generated catch block
+		e1.printStackTrace();
+	}
     try (Connection connection = dataSource.getConnection()) {
+
 
       Statement stmt = connection.createStatement();
       ResultSet results = stmt.executeQuery("select * from listings l where ST_DWithin(l.geoloc, 'POINT(33.5763 -111.9275)'::geography, 50);");
@@ -65,15 +78,24 @@ public class Main {
       StringBuffer buf = new StringBuffer();
       while (results.next()) {
     	  buf.append("apn: " + results.getString(1) + System.lineSeparator());
+    	  buf.append("<br>");
     	  buf.append("ListingID: " + results.getInt(2) + System.lineSeparator());
+    	  buf.append("<br>");
     	  buf.append("DwellingType: " + results.getString(4) + System.lineSeparator());
+    	  buf.append("<br>");
     	  buf.append("ListPrice: " + results.getFloat(11) + System.lineSeparator());
+    	  buf.append("<br>");
     	  buf.append("Lat: " + results.getFloat(14) + System.lineSeparator());
+    	  buf.append("<br>");
     	  buf.append("Lon: " + results.getFloat(15) + System.lineSeparator());
+    	  buf.append("<br>");
           buf.append("--------------------------");
+    	  buf.append("<br>");
       }
       
-      buf.append("Spring version: " + SpringVersion.getVersion());
+      buf.append("<br>Spring version: " + SpringVersion.getVersion());
+	  buf.append("<br>");
+
 
       model.put("records", buf.toString());
       return "db";
@@ -87,10 +109,14 @@ public class Main {
   @Bean
   public DataSource dataSource() throws SQLException {
     if (dbUrl == null || dbUrl.isEmpty()) {
+      System.err.println("************** DBURL is NULL OR EMPTY");
       return new HikariDataSource();
     } else {
       HikariConfig config = new HikariConfig();
+      System.err.println("**************  DBURL is : " + dbUrl);
+      dbUrl = dbUrl.replace("postgres", "jdbc:postgresql");
       config.setJdbcUrl(dbUrl);
+
       return new HikariDataSource(config);
     }
   }

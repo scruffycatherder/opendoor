@@ -8,7 +8,7 @@ import org.springframework.web.servlet.config.annotation.ViewResolverRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
 @Configuration
-@ComponentScan("com.opendoor.interview.web")
+@ComponentScan("com.opendoor.interview")
 @EnableWebMvc
 public class WebConfig implements WebMvcConfigurer {
 

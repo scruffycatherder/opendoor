@@ -42,42 +42,44 @@ public class ListingController {
 
 		try (Connection connection = dataSource.getConnection()) {
 
-			/*
-			Statement ps = connection.createStatement();
-			ResultSet results = ps.executeQuery(
-					String.format("select * from listings l where ST_DWithin(l.geoloc, 'POINT(%f %f)'::geography, %d);",
-					geoLat, geoLon, radiusMeters));
-			*/
-			// TODO query specific fields, not *
+			// TODO query specific fields, not * - use names to reference from result set rather than index.
 			PreparedStatement ps = connection.prepareStatement(
-					String.format("select * from listings l where ST_DWithin(l.geoloc, 'POINT(%f %f)'::geography, %d) " +
-			                      "and l.numBedrooms > ? and l.numBaths > ? and l.livingArea > ?",
-					geoLat, geoLon, radiusMeters));
+					String.format("select l.apn as apn, l.listingId as listingId, l.dwellingType as dwellingType, " +
+			                      "l.listPrice as listPrice, l.geoLat as geoLat, l.geoLon as geoLon, " +
+							      "l.numBedrooms as numBeds, l.numBaths as numBaths, l.livingArea as livingArea, " +
+			                      "l.geoloc <-> 'POINT(%f %f)'::geography as distance " +
+			                      "from listings l where ST_DWithin(l.geoloc, 'POINT(%f %f)'::geography, %d) " +
+			                      "and l.numBedrooms >= ? and l.numBedrooms <= ? and l.numBaths >= ?  and l.numBaths <= ? " +
+							      "and l.livingArea >= ? and l.livingArea <= ? order by distance asc",
+					geoLat, geoLon, geoLat, geoLon, radiusMeters));
 			ps.setInt(1, minBeds);
-			ps.setFloat(2, minBaths);
-			ps.setFloat(3,  minArea);
+			ps.setInt(2, maxBeds < 0 ? Integer.MAX_VALUE : maxBeds);
+			ps.setFloat(3, minBaths);
+			ps.setFloat(4,  maxBaths < 0 ? Float.POSITIVE_INFINITY : maxBaths);
+			ps.setFloat(5,  minArea);
+			ps.setFloat(6,  maxArea < 0 ? Float.POSITIVE_INFINITY : maxArea);
 			ResultSet results = ps.executeQuery();
 			
 			// TODO : return JSON or protos
 			StringBuffer buf = new StringBuffer();
 			while (results.next()) {
-				buf.append("apn: " + results.getString(1) + System.lineSeparator());
+				buf.append("apn: " + results.getString("apn") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("ListingID: " + results.getInt(2) + System.lineSeparator());
+				buf.append("ListingID: " + results.getInt("listingId") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("DwellingType: " + results.getString(4) + System.lineSeparator());
+				buf.append("DwellingType: " + results.getString("dwellingType") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("ListPrice: " + results.getFloat(11) + System.lineSeparator());
+				buf.append("ListPrice: " + results.getFloat("listPrice") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("Lat: " + results.getFloat(14) + System.lineSeparator());
+				buf.append("Lat: " + results.getFloat("geoLat") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("Lon: " + results.getFloat(15) + System.lineSeparator());
+				buf.append("Lon: " + results.getFloat("geoLon") + System.lineSeparator());
 				buf.append("<br>");
-				buf.append("Bedrooms: " + results.getInt(18));
+				buf.append("Bedrooms: " + results.getInt("numBeds"));
 				buf.append("<br>");
-				buf.append("Bathrooms: " + results.getFloat(19));
+				buf.append("Bathrooms: " + results.getFloat("numBaths"));
 				buf.append("<br>");
-				buf.append("LivingArea: " + results.getFloat(17));
+				buf.append("LivingArea: " + results.getFloat("livingArea"));
 				buf.append("<br>");
 				buf.append("--------------------------");
 				buf.append("<br>");

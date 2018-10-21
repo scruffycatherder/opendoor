@@ -25,28 +25,6 @@ CREATE TABLE listings (
     NumBedrooms integer,
     NumBaths float)
 
-CREATE TABLE listings2 (
-
-    apn character varying(20),
-    ListingId integer,
-    ModTimestamp timestamp,
-    DwellingType character varying(50),
-    ListDate date,
-    CloseDate date,
-    ContractDate date,
-    ExpirationDate date,
-    CancelDate date,
-    OriginalListPrice float,
-    ListPrice float,
-    ClosePrice float,
-    GeoLat float,
-    GeoLon float,
-    PostalCode character(5),
-    YearBuilt integer,
-    LivingArea float,
-    NumBedrooms integer,
-    NumBaths float)
-
 ##apn can be null
 ##apn can be null
 ##apn is not unique ID

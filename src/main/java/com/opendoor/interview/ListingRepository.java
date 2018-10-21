@@ -4,7 +4,7 @@ package com.opendoor.interview;
 //import org.springframework.stereotype.Repository;
 
 //@Repository
-public interface ListingRepository {
+public interface ListingRepository { 
 	//extends PagingAndSortingRepository<Listing, Long> { 
 }
 

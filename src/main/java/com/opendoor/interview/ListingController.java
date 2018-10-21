@@ -1,13 +1,10 @@
 package com.opendoor.interview;
 
-/*
 import java.sql.Connection;
-import java.sql.PreparedStatement;
+
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Map;
-
 import javax.sql.DataSource;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,19 +13,16 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.core.SpringVersion;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-*/
 
-//@RestController
-//@SpringBootApplication
+@RestController
+@SpringBootApplication
 public class ListingController {
-/*
+
 	@Value("${spring.datasource.url}")
 	private String dbUrl;
 
@@ -38,17 +32,17 @@ public class ListingController {
 	@GetMapping("/listings")
 	String searchListings(
 			@RequestParam(value="geoLat") double geoLat,
-			@RequestParam(value="geoLon") double geoLon) {
+			@RequestParam(value="geoLon") double geoLon,
+			@RequestParam(value="radiusMeters", defaultValue="1609") int radiusMeters) {
 
 		try (Connection connection = dataSource.getConnection()) {
 
-			PreparedStatement ps = connection.prepareStatement("select * from listings l where ST_DWithin(l.geoloc, 'POINT(? ?)'::geography, 50);");
-
-			ps.setDouble(1, geoLat);
-			ps.setDouble(2, geoLon);
-			ResultSet results = ps.executeQuery();
+			Statement ps = connection.createStatement();
+			ResultSet results = ps.executeQuery(
+					String.format("select * from listings l where ST_DWithin(l.geoloc, 'POINT(%f %f)'::geography, %d);",
+					geoLat, geoLon, radiusMeters));
 			
-			// TODO : return JSON
+			// TODO : return JSON or protos
 			StringBuffer buf = new StringBuffer();
 			while (results.next()) {
 				buf.append("apn: " + results.getString(1) + System.lineSeparator());
@@ -72,6 +66,7 @@ public class ListingController {
 
 			return buf.toString();
 		} catch (Exception e) {
+			e.printStackTrace();
 			return "error: " + e.getMessage();
 		}
 	}
@@ -82,9 +77,13 @@ public class ListingController {
 			return new HikariDataSource();
 		} else {
 			HikariConfig config = new HikariConfig();
+			// The heroku local environment doesn't like the "postgres:" url shorthand,
+			// so patch it up if needed.
+			if (!dbUrl.contains("jdbc:postgresql")) {
+			  dbUrl = dbUrl.replace("postgres:", "jdbc:postgresql:");
+			}
 			config.setJdbcUrl(dbUrl);
 			return new HikariDataSource(config);
 		}
 	}
-*/
 }

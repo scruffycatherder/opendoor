@@ -13,6 +13,12 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.RestController;
 
 
+/**
+ * Simple REST API controller for Listings.
+ * 
+ * @author bobl
+ *
+ */
 @RestController
 @SpringBootApplication
 public class ListingController {
@@ -25,6 +31,25 @@ public class ListingController {
 	}
 	
 	// TODO(bobl): consider using PagedResources, and returning HttpEntity<PagedResources<Listing>> here.
+	/**
+	 * Find Listings within a search radius that matches various search parameters.
+	 * 
+	 * Results are paginated according to {@code page} and {@code limit}.
+	 * 
+	 * @param geoLat Latitude for center of search radius
+	 * @param geoLon Longitude for center of search radius
+	 * @param radiusMeters radius of search circle in meters
+	 * @param minBeds minimum number of bedrooms
+	 * @param maxBeds maximum number of bedrooms
+	 * @param minBaths minimum number of bathrooms
+	 * @param maxBaths maximum number of bathrooms
+	 * @param minArea minimum living area square feet
+	 * @param maxArea maximum living area square feet
+	 * @param page the page number to return
+	 * @param limit the maximum number of results per page
+	 * @return
+	 * @throws SQLException
+	 */
 	@GetMapping(value="/listings", produces = MediaType.APPLICATION_JSON_VALUE)
 	public @ResponseBody List<Listing> searchListings(
 			@RequestParam(value="geoLat") double geoLat,
@@ -40,9 +65,7 @@ public class ListingController {
 			@RequestParam(value="limit", defaultValue="50") int limit)
 					throws SQLException {		
 		PageRequest pageable = PageRequest.of(page, limit);
-		List<Listing> listings = repository.searchListings(pageable, geoLat, geoLon, radiusMeters, minBeds, maxBeds, minBaths, maxBaths, minArea, maxArea);
-
-		return listings;
+		return repository.searchListings(pageable, geoLat, geoLon, radiusMeters, minBeds, maxBeds, minBaths, maxBaths, minArea, maxArea);
 	}
 
 }

@@ -3,15 +3,16 @@ package com.opendoor.interview;
 import java.time.LocalDateTime;
 import java.sql.Date;
 import java.sql.Timestamp;
-/*
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-*/
+
 import java.time.LocalDate;
 
-//@Entity
+
+/**
+ * Simple POJO for home Listings.
+ * 
+ * @author bobl
+ *
+ */
 public class Listing {
 
 	private String apn;
@@ -34,8 +35,6 @@ public class Listing {
 	private int numBedrooms;
 	private double numBaths;  // TODO - should probably be a float.
 	
-//	@Id
-//	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long listingID_PK;
 	
 	public Listing( long listingID_PK, String apn, int listingId, LocalDateTime modTimestamp, String dwellingType, LocalDate listDate,

@@ -17,15 +17,18 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.data.repository.PagingAndSortingRepository;
-import org.springframework.http.MediaType;
 import org.springframework.stereotype.Repository;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 
+/**
+ * Repository for {@link Listing}s.
+ * 
+ * Mostly unimplemented; currently only searchListings is supported.
+ * 
+ * @author bobl
+ */
 @Repository
 public class ListingRepository implements PagingAndSortingRepository<Listing, Long> { 
 
@@ -40,9 +43,7 @@ public class ListingRepository implements PagingAndSortingRepository<Listing, Lo
 			double geoLat, double geoLon, int radiusMeters, int minBeds, int maxBeds, float minBaths, float maxBaths,
 			float minArea,float maxArea)
 					throws SQLException {
-
 		try (Connection connection = dataSource.getConnection()) {
-
 			// TODO switch to some data access framework to clean this up and make it more maintainable.
 			PreparedStatement ps = connection.prepareStatement(
 					String.format("select l.listingID_PK as listingID_PK, l.apn as apn, l.listingId as listingId, " +
@@ -119,79 +120,79 @@ public class ListingRepository implements PagingAndSortingRepository<Listing, Lo
 	@Override
 	public <S extends Listing> S save(S entity) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public <S extends Listing> Iterable<S> saveAll(Iterable<S> entities) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Optional<Listing> findById(Long id) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public boolean existsById(Long id) {
 		// TODO Auto-generated method stub
-		return false;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<Listing> findAll() {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<Listing> findAllById(Iterable<Long> ids) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public long count() {
 		// TODO Auto-generated method stub
-		return 0;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteById(Long id) {
 		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void delete(Listing entity) {
 		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteAll(Iterable<? extends Listing> entities) {
 		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public void deleteAll() {
 		// TODO Auto-generated method stub
-		
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Iterable<Listing> findAll(Sort sort) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
 	public Page<Listing> findAll(Pageable pageable) {
 		// TODO Auto-generated method stub
-		return null;
+		throw new UnsupportedOperationException();
 	}
 }
 

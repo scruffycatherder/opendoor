@@ -56,4 +56,6 @@ Needs tests.
 Needs documentation.
 Needs error handling.
 Needs instrumentation.
+Need to flesh out Repository.
+Need to implement standard REST operations for Listing resource.
 
